@@ -6,7 +6,9 @@ cache:
 
 before_script:
   - npm install
+  -  npm install --dev appr
 
 test:
   script:
+    - pwd
     - npm test
