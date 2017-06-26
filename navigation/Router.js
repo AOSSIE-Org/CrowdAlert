@@ -1,13 +1,13 @@
 import { createRouter } from '@expo/ex-navigation';
 
 import Home from '../screens/Home';
-import MapView from '../screens/MapView.js';
+import MapScreen from '../screens/MapScreen.js';
 import Profile from '../screens/Profile';
 import RootNavigation from './RootNavigation';
 
 export default createRouter(() => ({
   home: () => Home,
-  mapView: () => MapView,
+  mapScreen: () => MapScreen,
   profile: () => Profile,
   rootNavigation: () => RootNavigation,
 }));
