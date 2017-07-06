@@ -13,19 +13,18 @@
     "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
-    "test": "node node_modules/jest/bin/jest.js ",
-    "app": "appr"
+    "test": "node node_modules/jest/bin/jest.js "
   },
   "jest": {
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@expo/ex-navigation": "^3.0.0",
-    "@expo/vector-icons": "^5.0.0",
-    "exp": "^42.0.0",
+    "exp": "^42.1.0",
     "expo": "^17.0.0",
     "react": "16.0.0-alpha.6",
     "react-native": "^0.44.0",
+    "react-native-material-bottom-navigation": "^0.5.1",
+    "react-native-vector-icons": "^4.2.0",
     "react-navigation": "^1.0.0-beta.11"
   }
 }
