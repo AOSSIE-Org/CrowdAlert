@@ -1,33 +1,11 @@
-import React from 'react';
-import { View, Platform, StyleSheet } from 'react-native';
-import Expo from 'expo';
-import Home from './screens/Home'
-import {NavigationProvider, StackNavigation} from '@expo/ex-navigation';
+import React from "react";
+import {RootNav } from './navigation/Router';
 
-import Router from './navigation/Router';
-
-export default class AppContainer extends React.Component {
+import Router from "./navigation/Router";
+export default class App extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <NavigationProvider router={Router}>
-            <StackNavigation
-              id="root"
-              initialRoute={Router.getRoute('rootNavigation')}
-            />
-          </NavigationProvider>
-      </View>
+      <RootNav />
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  statusBarUnderlay: {
-    height: 24,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-  },
-});
