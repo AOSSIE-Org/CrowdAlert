@@ -1,11 +1,13 @@
 import React from "react";
-import {RootNav } from './navigation/Router';
+import { AppNav } from "./navigation/Router";
+import { Root } from "native-base";
 
-import Router from "./navigation/Router";
 export default class App extends React.Component {
   render() {
     return (
-      <RootNav />
+      <Root>
+        <AppNav />
+      </Root>
     );
   }
 }
