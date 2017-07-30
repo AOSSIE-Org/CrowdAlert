@@ -5,3 +5,5 @@ npm-debug.*
 package-lock.json
 yarn*
 .gitignore
+coverage
+.vscode

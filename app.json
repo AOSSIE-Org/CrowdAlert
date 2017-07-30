@@ -1,5 +1,22 @@
 {
   "expo": {
-    "sdkVersion": "17.0.0"
+    "name": "Crowd Alert",
+    "description": "Crowd Sourced application to map incidents around the globe",
+    "privacy": "public",
+    "slug": "crowdAlert",
+    "version": "0.0.1",
+    "sdkVersion": "18.0.0",
+    "icon":"./assets/images/fire_marker_100_new.png",
+    "loading" :{
+      "icon": "./assets/images/fire_marker_100_new.png"
+    },
+      "android": {
+      "package": "com.aossie.crowdalert",
+      "config" :{
+        "googleMaps" : {
+          "apiKey" : "--- API key for goolgle maps ---"
+        }
+      }
+    }
   }
 }

@@ -2,6 +2,9 @@ import React from "react";
 import { StyleSheet, Text, View, Platform, Dimensions } from "react-native";
 import Expo from "expo";
 import { Components } from "expo";
+import { firebaseConfig } from "../config";
+import * as firebase from "firebase";
+//firebase.initializeApp(firebaseConfig)
 
 //Import map marker images
 const road_marker = require("../assets/images/map/road_marker_100.png");
@@ -28,8 +31,10 @@ export default class MapScreen extends React.Component {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA
       },
-      markers: [ ]
+      markers: []
     };
+
+    this.itemsRef = firebase.database().ref("incidents");
   }
 
   static navigationOptions = {
@@ -38,6 +43,7 @@ export default class MapScreen extends React.Component {
 
   // Sets the marker image based on the type of incident
   _getMarkerImage = type => {
+    console.log(type);
     if (type === "fire") {
       return fire_marker;
     } else if (type === "road") {
@@ -50,35 +56,54 @@ export default class MapScreen extends React.Component {
   _getMarkerInformation = () => {
     var tmp = [
       {
-          id: 1,
-          type: "fire",
-          title: "Forrest Fire",
-          description: "Fire is spreading",
-          coordinate: {
-            latitude: 10,
-            longitude: 7
-          }
-        },
-        {
-          id: 2,
-          type: "road",
-          title: "Car Rollover",
-          description: "car rolled over",
-          coordinate: {
-            latitude: 11,
-            longitude: 8
-          }
+        id: 1,
+        type: "fire",
+        title: "Forrest Fire",
+        description: "Fire is spreading",
+        coordinate: {
+          latitude: 10,
+          longitude: 7
         }
+      },
+      {
+        id: 2,
+        type: "road",
+        title: "Car Rollover",
+        description: "car rolled over",
+        coordinate: {
+          latitude: 11,
+          longitude: 8
+        }
+      }
     ];
-    this.setState({ markers: tmp });
+    // this.setState({ markers: tmp });
     //console.log("_getMarkerInformation");
     //console.log(this.state.markers);
     return tmp;
   };
 
+  listenForItems(itemsRef) {
+    console.log("Listening for Items");
+    itemsRef.on("value", snap => {
+      // get children as an array
+      var items = [];
+      snap.forEach(child => {
+        items.push({
+          title: child.val().title,
+          _key: child.key,
+          value: child.val()
+        });
+      });
+
+      this.setState({ markers: items });
+    });
+  }
+
   componentDidMount() {
     // Get Marker Information from the server
-    this._getMarkerInformation();
+    //this._getMarkerInformation();
+
+    this.listenForItems(this.itemsRef);
 
     // Get user's location to render the map around the user
     navigator.geolocation.getCurrentPosition(
@@ -103,18 +128,30 @@ export default class MapScreen extends React.Component {
     return (
       <View style={{ flex: 1 }}>
         <Expo.MapView
-          style={{ flex: 1 }}
-          initialRegion={this.state.mapInitialRegion}
+          region={this.state.mapInitialRegion}
+          showUserLocation
+          provider="google"
+          showsMyLocationButton
+          style={styles.map}
         >
+          <Expo.MapView.Marker
+            coordinate={{
+              latitude: this.state.mapInitialRegion.latitude,
+              longitude: this.state.mapInitialRegion.longitude
+            }}
+          />
           {this.state.markers.map(marker => {
             //console.log(marker);
             return (
               <Expo.MapView.Marker
-                key={marker.id}
-                coordinate={marker.coordinate}
-                title={marker.title}
-                description={marker.description}
-                image={this._getMarkerImage(marker.type)}
+                key={marker._key}
+                coordinate={{
+                  latitude: marker.value.location.coords.latitude,
+                  longitude: marker.value.location.coords.longitude
+                }}
+                title={marker.value.category}
+                description={marker.value.comments}
+                image={this._getMarkerImage(marker.value.category)}
               />
             );
           })}
@@ -132,7 +169,6 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   map: {
-    alignSelf: "stretch",
     flex: 1
   }
 });

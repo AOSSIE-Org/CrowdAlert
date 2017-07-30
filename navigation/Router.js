@@ -4,11 +4,11 @@ import Profile from "../screens/Profile";
 import AddIncident from "../screens/AddIncident";
 
 import { NavigationComponent } from "react-native-material-bottom-navigation";
-import { TabNavigator } from "react-navigation";
+import { TabNavigator, StackNavigator } from "react-navigation";
 import React from "react";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-export const RootNav = TabNavigator(
+export const TabNav = TabNavigator(
   {
     Map: {
       screen: MapScreen
@@ -48,3 +48,12 @@ export const RootNav = TabNavigator(
     }
   }
 );
+
+export const AppNav = StackNavigator({
+  Home: {
+    screen: TabNav,
+  },
+    AddIncident: {
+    screen: AddIncident,
+  }
+});

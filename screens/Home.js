@@ -5,20 +5,27 @@ import {
   View,
   Platform,
   Image,
-  TouchableHighlight
+  TouchableOpacity
 } from "react-native";
 import Expo from "expo";
 import Router from "../navigation/Router";
+import styles from "../assets/styles/HomeScreen";
 
 export default class HomeScreen extends React.Component {
+  static navigationOptions = {
+    header: null
+  };
   render() {
+    const { navigate } = this.props.navigation;
+
     return (
       <View style={styles.menuContainer}>
         <View style={styles.rowContainer}>
-          <TouchableHighlight
+          <TouchableOpacity
             style={styles.highlight}
             underlayColor="transparent"
             activeOpacity={0.5}
+            onPress={() => navigate("AddIncident", { type: "road" })}
           >
             <View style={styles.menuButton}>
               <Image
@@ -27,11 +34,12 @@ export default class HomeScreen extends React.Component {
               />
               <Text style={styles.menuText}>Road</Text>
             </View>
-          </TouchableHighlight>
-          <TouchableHighlight
+          </TouchableOpacity>
+          <TouchableOpacity
             style={styles.highlight}
             underlayColor="transparent"
             activeOpacity={0.5}
+            onPress={() => navigate("AddIncident", { type: "fire" })}
           >
             <View style={styles.menuButton}>
               <Image
@@ -40,11 +48,12 @@ export default class HomeScreen extends React.Component {
               />
               <Text style={styles.menuText}>Fire</Text>
             </View>
-          </TouchableHighlight>
-          <TouchableHighlight
+          </TouchableOpacity>
+          <TouchableOpacity
             style={styles.highlight}
             underlayColor="transparent"
             activeOpacity={0.5}
+            onPress={() => navigate("AddIncident", { type: "health" })}
           >
             <View style={styles.menuButton}>
               <Image
@@ -53,38 +62,9 @@ export default class HomeScreen extends React.Component {
               />
               <Text style={styles.menuText}>Health</Text>
             </View>
-          </TouchableHighlight>
+          </TouchableOpacity>
         </View>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  menuContainer: {
-    flex: 1,
-    backgroundColor: "#cecece",
-    alignItems: "center"
-  },
-  rowContainer: {
-    flex: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  highlight: {},
-  menuButton: {
-    flex: 1,
-    paddingVertical: 20,
-    paddingHorizontal: 10,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  menuImage: {
-    height: 100,
-    width: 100
-  },
-  menuText: {}
-});
