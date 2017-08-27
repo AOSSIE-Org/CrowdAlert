@@ -2,7 +2,7 @@ import HomeScreen from "../screens/Home";
 import MapScreen from "../screens/MapScreen.js";
 import Profile from "../screens/Profile";
 import AddIncident from "../screens/AddIncident";
-
+import Incident from "../screens/Incident";
 import { NavigationComponent } from "react-native-material-bottom-navigation";
 import { TabNavigator, StackNavigator } from "react-navigation";
 import React from "react";
@@ -23,7 +23,7 @@ export const TabNav = TabNavigator(
   {
     tabBarComponent: NavigationComponent,
     tabBarPosition: "bottom",
-    initialRouteName: 'Home',
+    initialRouteName: "Home",
     lazy: true,
     tabBarOptions: {
       bottomNavigationOptions: {
@@ -51,9 +51,12 @@ export const TabNav = TabNavigator(
 
 export const AppNav = StackNavigator({
   Home: {
-    screen: TabNav,
+    screen: TabNav
   },
-    AddIncident: {
-    screen: AddIncident,
+  AddIncident: {
+    screen: AddIncident
+  },
+  Incident: {
+    screen: Incident
   }
 });

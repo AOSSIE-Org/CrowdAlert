@@ -10,11 +10,13 @@ import {
 import Expo from "expo";
 import Router from "../navigation/Router";
 import styles from "../assets/styles/HomeScreen";
+import { checkLogin } from "../util/storageUtil";
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null
   };
+
   render() {
     const { navigate } = this.props.navigation;
 
