@@ -52,12 +52,12 @@ export default class Login extends React.Component {
             height: screenHeight,
             justifyContent: "center",
             flexDirection: "column",
-            backgroundColor: "#9b59b6"
+            backgroundColor: "white"
           }}
         >
           <View style={styles.logoItem}>
             <Text style={{ fontSize: 45, alignSelf: "center" }}>
-              {" "}crowdAlert
+              {" "}Crowd Alert
             </Text>
           </View>
           <View style={styles.loginItem}>

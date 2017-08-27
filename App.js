@@ -1,5 +1,5 @@
 import React from "react";
-import { AppNav } from "./navigation/Router";
+import { AppNav } from "./src/navigation/Router";
 import { Root } from "native-base";
 
 export default class App extends React.Component {

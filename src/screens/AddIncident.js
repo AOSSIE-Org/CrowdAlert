@@ -7,7 +7,8 @@ import styles from "../assets/styles/AddIncidentStyle";
 import LoginComponent from "../screens/LoginComponent";
 import { NavigationActions } from "react-navigation";
 import { checkLogin } from "../util/storageUtil";
-import { getHeaderColor, capitalizeFirstLetter, firebase } from "../util/util";
+import { getHeaderColor, capitalizeFirstLetter } from "../util/util";
+import { firebase } from "../util/firebaseUtil";
 import {
   StyleSheet,
   Text,
@@ -56,7 +57,8 @@ export default class AddIncident extends React.Component {
       location: "",
       report_count: 0,
       reports: [""],
-      user_email: ""
+      user_email: "",
+      visible: true
     };
     this.itemsRef = this.getRef().child("incidents");
     this._checkLogin();
@@ -144,16 +146,14 @@ export default class AddIncident extends React.Component {
         if (result != false) {
           this.setState({ user_email: result });
           this.setState({ user_id: result.replace(".", "") });
-        } 
+        }
       })
       .catch(error => {
         alert("Error: ", error);
       });
   };
   render() {
-    if (this.state.user_id === "") {
-      return <LoginComponent onLogin={this._onLogin.bind(this)} />;
-    } else {
+    if (this.state.user_id != "") {
       return (
         <Container>
           <Header
@@ -229,7 +229,7 @@ export default class AddIncident extends React.Component {
                   style={styles.checkBox}
                   isChecked={this.state.public_share}
                   onClick={() => {
-                    this.setState({ public_share: !this.state.public_share });
+                    this.setState({ public_share: !this.state.public_share, visible: !this.state.visible });
                   }}
                 />
                 <Body style={{ marginLeft: 10 }}>
@@ -263,6 +263,8 @@ export default class AddIncident extends React.Component {
           </Content>
         </Container>
       );
+    } else {
+      return <LoginComponent onLogin={this._onLogin.bind(this)} />;
     }
   }
 }

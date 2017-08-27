@@ -1,6 +1,3 @@
-import { firebaseConfig } from "../config";
-import * as fbase from "firebase";
-const firebase = fbase.initializeApp(firebaseConfig);
 
 getHeaderColor = type => {
   if (type === "fire") return "#d35400";
@@ -38,4 +35,4 @@ timeSince = date => {
   return Math.floor(seconds) + " seconds ago";
 };
 
-export { getHeaderColor, capitalizeFirstLetter, firebase, timeSince };
+export { getHeaderColor, capitalizeFirstLetter, timeSince };

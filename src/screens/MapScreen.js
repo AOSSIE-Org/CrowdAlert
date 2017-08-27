@@ -2,9 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View, Platform, Dimensions } from "react-native";
 import Expo from "expo";
 import { Components } from "expo";
-import { firebaseConfig } from "../config";
 import * as firebase from "firebase";
-//firebase.initializeApp(firebaseConfig)
 
 //Import map marker images
 const road_marker = require("../assets/images/map/road_marker_100.png");
@@ -89,11 +87,13 @@ export default class MapScreen extends React.Component {
       // get children as an array
       var items = [];
       snap.forEach(child => {
-        items.push({
-          title: child.val().title,
-          _key: child.key,
-          value: child.val()
-        });
+        if (child.val().visible == true) {
+          items.push({
+            title: child.val().title,
+            _key: child.key,
+            value: child.val()
+          });
+        }
       });
 
       this.setState({ markers: items });
