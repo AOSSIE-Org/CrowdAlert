@@ -4,11 +4,10 @@ import Toast from "react-native-smart-loading-spinner-overlay";
 import LoadingSpinnerOverlay from "react-native-smart-loading-spinner-overlay";
 import CheckBox from "react-native-check-box";
 import styles from "../assets/styles/AddIncidentStyle";
+import LoginComponent from "../screens/LoginComponent";
 import { NavigationActions } from "react-navigation";
-import { getHeaderColor, capitalizeFirstLetter } from "../util/util";
-import {firebaseConfig} from "../config";
-import * as firebase from 'firebase';
-firebase.initializeApp(firebaseConfig)
+import { checkLogin } from "../util/storageUtil";
+import { getHeaderColor, capitalizeFirstLetter, firebase } from "../util/util";
 import {
   StyleSheet,
   Text,
@@ -54,9 +53,13 @@ export default class AddIncident extends React.Component {
       image: false,
       image_uri: "",
       image_base64: "",
-      location: ""
+      location: "",
+      report_count: 0,
+      reports: [""],
+      user_email: ""
     };
     this.itemsRef = this.getRef().child("incidents");
+    this._checkLogin();
   }
 
   getRef = () => {
@@ -67,8 +70,7 @@ export default class AddIncident extends React.Component {
     header: null
   };
 
-
-  // Ger user location 
+  // Ger user location
   _getLocation = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== "granted") {
@@ -130,115 +132,137 @@ export default class AddIncident extends React.Component {
 
     this._modalLoadingSpinnerOverLay.hide();
   };
-
-
+  _onLogin = email => {
+    console.log("->", email);
+    this.setState({ user_email: email });
+    this.setState({ user_id: email.replace(".", "") });
+    console.log(this.state);
+  };
+  _checkLogin = async () => {
+    await checkLogin()
+      .then(result => {
+        if (result != false) {
+          this.setState({ user_email: result });
+          this.setState({ user_id: result.replace(".", "") });
+        } 
+      })
+      .catch(error => {
+        alert("Error: ", error);
+      });
+  };
   render() {
-    return (
-      <Container>
-        <Header
-          style={{ backgroundColor: getHeaderColor(this.state.category) }}
-        >
-          <Body>
-            <Text style={{ color: "white", fontSize: 20, textAlign: "center" }}>
-              Report Incident:
-              {" "}
-              {capitalizeFirstLetter(this.state.category)}
-            </Text>
-          </Body>
-        </Header>
-        <Content>
-          {this.state.image &&
-            <Card>
-              <CardItem cardBody>
-                <Image
-                  source={{
-                    uri: "data:image/jpeg;base64, " + this.state.image_base64
-                  }}
-                  style={{ height: 200, width: null, flex: 1 }}
-                />
-              </CardItem>
-            </Card>}
-          <View style={styles.rowContainer}>
-            <TouchableOpacity onPress={this._pickImage}>
-              <View style={styles.addPhoto}>
-                <Icon name="camera" style={{ fontSize: 50 }} />
-                {this.state.image
-                  ? <Text> Update Photo </Text>
-                  : <Text> Add Photo </Text>}
-              </View>
-            </TouchableOpacity>
-            <View style={styles.commentSection}>
-              <Item floatingLabel>
-                <Label>Add Any Comments</Label>
-                <Input
-                  onChangeText={text => {
-                    this.setState({ comments: text });
-                  }}
-                />
-              </Item>
-            </View>
-          </View>
-          <View style={styles.subCategoryPicker}>
-            <Text style={styles.pickerHeader}> Select a sub Category </Text>
-            <View style={styles.picker}>
-              <Picker
-                iosHeader="Select a sub Category"
-                mode="dropdown"
-                selectedValue={this.state.sub_category}
-                onValueChange={item => {
-                  this.setState({ sub_category: item });
-                }}
-              > 
-                {
-                  // TODO: get categories based on incident category
-                }
-                <Picker.Item label="Category1" value="Category1" />
-                <Picker.Item label="Category2" value="Category2" />
-                <Picker.Item label="Category3" value="Category3" />
-
-              </Picker>
-            </View>
-          </View>
-          <View style={styles.additionOptions}>
-            <Text style={styles.pickerHeader}> Upload Options </Text>
-            <ListItem>
-              <CheckBox
-                style={styles.checkBox}
-                isChecked={this.state.public_share}
-                onClick={() => {
-                  this.setState({ public_share: !this.state.public_share });
-                }}
-              />
-              <Body style={{ marginLeft: 10 }}>
-                <Text>Share Publicly</Text>
-              </Body>
-            </ListItem>
-            <ListItem>
-              <CheckBox
-                style={styles.checkBox}
-                isChecked={this.state.local_assistance}
-                onClick={() => {
-                  this.setState({ public_share: !this.state.public_share });
-                }}
-              />
-              <Body style={{ marginLeft: 10 }}>
-                <Text>Get Local Assistance</Text>
-              </Body>
-            </ListItem>
-          </View>
-
-          <Button
-            block
-            style={{ marginLeft: 20, marginRight: 20, marginBottom: 30 }}
-            onPress={this._onSubmit}
+    if (this.state.user_id === "") {
+      return <LoginComponent onLogin={this._onLogin.bind(this)} />;
+    } else {
+      return (
+        <Container>
+          <Header
+            style={{ backgroundColor: getHeaderColor(this.state.category) }}
           >
-            <Text style={{ color: "white" }}>Submit</Text>
-          </Button>
-          <LoadingSpinnerOverlay
-            ref={component => this._modalLoadingSpinnerOverLay = component}
-          />
-        </Content>
-      </Container>
-    );
+            <Body>
+              <Text
+                style={{ color: "white", fontSize: 20, textAlign: "center" }}
+              >
+                Report Incident:
+                {" "}
+                {capitalizeFirstLetter(this.state.category)}
+              </Text>
+            </Body>
+          </Header>
+          <Content>
+            {this.state.image &&
+              <Card>
+                <CardItem cardBody>
+                  <Image
+                    source={{
+                      uri: "data:image/jpeg;base64, " + this.state.image_base64
+                    }}
+                    style={{ height: 200, width: null, flex: 1 }}
+                  />
+                </CardItem>
+              </Card>}
+            <View style={styles.rowContainer}>
+              <TouchableOpacity onPress={this._pickImage}>
+                <View style={styles.addPhoto}>
+                  <Icon name="camera" style={{ fontSize: 50 }} />
+                  {this.state.image
+                    ? <Text> Update Photo </Text>
+                    : <Text> Add Photo </Text>}
+                </View>
+              </TouchableOpacity>
+              <View style={styles.commentSection}>
+                <Item floatingLabel>
+                  <Label>Add Any Comments</Label>
+                  <Input
+                    onChangeText={text => {
+                      this.setState({ comments: text });
+                    }}
+                  />
+                </Item>
+              </View>
+            </View>
+            <View style={styles.subCategoryPicker}>
+              <Text style={styles.pickerHeader}> Select a sub Category </Text>
+              <View style={styles.picker}>
+                <Picker
+                  iosHeader="Select a sub Category"
+                  mode="dropdown"
+                  selectedValue={this.state.sub_category}
+                  onValueChange={item => {
+                    this.setState({ sub_category: item });
+                  }}
+                >
+                  {
+                    // TODO: get categories based on incident category
+                  }
+                  <Picker.Item label="Category1" value="Category1" />
+                  <Picker.Item label="Category2" value="Category2" />
+                  <Picker.Item label="Category3" value="Category3" />
+
+                </Picker>
+              </View>
+            </View>
+            <View style={styles.additionOptions}>
+              <Text style={styles.pickerHeader}> Upload Options </Text>
+              <ListItem>
+                <CheckBox
+                  style={styles.checkBox}
+                  isChecked={this.state.public_share}
+                  onClick={() => {
+                    this.setState({ public_share: !this.state.public_share });
+                  }}
+                />
+                <Body style={{ marginLeft: 10 }}>
+                  <Text>Share Publicly</Text>
+                </Body>
+              </ListItem>
+              <ListItem>
+                <CheckBox
+                  style={styles.checkBox}
+                  isChecked={this.state.local_assistance}
+                  onClick={() => {
+                    this.setState({ public_share: !this.state.public_share });
+                  }}
+                />
+                <Body style={{ marginLeft: 10 }}>
+                  <Text>Get Local Assistance</Text>
+                </Body>
+              </ListItem>
+            </View>
+
+            <Button
+              block
+              style={{ marginLeft: 20, marginRight: 20, marginBottom: 30 }}
+              onPress={this._onSubmit}
+            >
+              <Text style={{ color: "white" }}>Submit</Text>
+            </Button>
+            <LoadingSpinnerOverlay
+              ref={component => this._modalLoadingSpinnerOverLay = component}
+            />
+          </Content>
+        </Container>
+      );
+    }
   }
 }

@@ -7,3 +7,4 @@ yarn*
 .gitignore
 coverage
 .vscode
+.config*

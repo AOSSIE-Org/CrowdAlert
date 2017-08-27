@@ -4,6 +4,9 @@ export const firebaseConfig = {
   apiKey: "",
   authDomain: "",
   databaseURL: "",
-  storageBucket: ""
+  storageBucket: "",
+}
+export const facebookConfig = {
+  facebookAppId: ""
 }
 

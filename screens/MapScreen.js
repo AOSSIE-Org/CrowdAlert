@@ -82,6 +82,7 @@ export default class MapScreen extends React.Component {
     return tmp;
   };
 
+  // Listening for changes in Incidents
   listenForItems(itemsRef) {
     console.log("Listening for Items");
     itemsRef.on("value", snap => {
@@ -125,13 +126,14 @@ export default class MapScreen extends React.Component {
 
   render() {
     //console.log(this.state);
+    const { navigate } = this.props.navigation;
     return (
       <View style={{ flex: 1 }}>
         <Expo.MapView
           region={this.state.mapInitialRegion}
-          showUserLocation
+          showUserLocation={true}
           provider="google"
-          showsMyLocationButton
+          showsMyLocationButton={true}
           style={styles.map}
         >
           <Expo.MapView.Marker
@@ -152,6 +154,13 @@ export default class MapScreen extends React.Component {
                 title={marker.value.category}
                 description={marker.value.comments}
                 image={this._getMarkerImage(marker.value.category)}
+                onCalloutPress={() => {
+                  var incidentDetails = {
+                    key: marker._key,
+                    value: marker.value
+                  };
+                  navigate("Incident", { data: incidentDetails });
+                }}
               />
             );
           })}
