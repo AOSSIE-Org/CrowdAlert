@@ -12,6 +12,7 @@ import {
   Content,
   CardItem,
   Right,
+  Left,
   Button
 } from "native-base";
 import { report } from "../util/firebaseUtil";
@@ -32,7 +33,7 @@ export default class Incident extends React.Component {
     console.log(params.data.key);
     this.state = {
       incident: params.data.value,
-      incident_key: params.data.key,
+      incident_key: params.data.key
     };
   }
   render() {
@@ -72,8 +73,34 @@ export default class Incident extends React.Component {
                   style={{ height: 200, width: null, flex: 1 }}
                 />
               </CardItem>}
+
             <CardItem>
               <Text> {this.state.incident.comments} </Text>
+            </CardItem>
+            <CardItem>
+              <Left>
+                {this.state.incident.visible
+                  ? <Text style={{ color: "#34495e" }}>
+                      This post is visible to everyone
+                    </Text>
+                  : <Text style={{ color: "#34495e" }}>
+                      Only you can view this post
+                    </Text>}
+              </Left>
+              <Right>
+                {this.state.incident.visible == false &&
+                  this.state.incident.report_count > 0
+                  ? <Text style={{ color: "#e74c3c" }}>
+                      {" "}
+                      Reported
+                      {" "}
+                      {this.state.incident.report_count}
+                      {" "}
+                      times
+                      {" "}
+                    </Text>
+                  : <Text />}
+              </Right>
             </CardItem>
           </Card>
           <Card style={{ padding: 5 }}>

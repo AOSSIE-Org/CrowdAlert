@@ -1,4 +1,6 @@
-import { firebase } from "../util/util";
+import { firebaseConfig } from "../config";
+import * as fbase from "firebase";
+const firebase = fbase.initializeApp(firebaseConfig);
 
 // Adds users data to the 'users' collection
 addUser = async userDetails => {
@@ -54,8 +56,13 @@ report = async incident_id => {
     .transaction(function(report_count) {
       return report_count + 1;
     })
+    .then(result => {
+      console.log("reported", result);
+      alert("Incident has been reported");
+    })
     .catch(error => {
       console.log(error);
+      alert("Some error occured: ", error)
     });
 };
-export { report, addUser, query };
+export { report, addUser, query, firebase };

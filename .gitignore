@@ -7,4 +7,5 @@ yarn*
 .gitignore
 coverage
 .vscode
-.config*
+src/config.js
+firebase-functions/functions/node_modules/

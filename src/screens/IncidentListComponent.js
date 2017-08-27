@@ -48,8 +48,6 @@ export default class IncidentListComponent extends React.Component {
     this._modalLoadingSpinnerOverLay.hide();
   }
 
-
-
   render() {
     return (
       <View>
@@ -64,16 +62,16 @@ export default class IncidentListComponent extends React.Component {
             console.log("test", getHeaderColor(incident.value.category));
             return (
               <CardItem
+                button
                 key={incident.key}
-                
+                onPress={() => {
+                  this.props.navigateProps1(incident);
+                }}
               >
                 <Text
                   style={{ color: getHeaderColor(incident.value.category) }}
-                  onPress={() => {
-                  this.props.navigateProps1(incident);
-                }}
                 >
-                  {capitalizeFirstLetter(incident.value.sub_category)}
+                  {capitalizeFirstLetter(incident.value.category)}
                 </Text>
                 <Text> {incident.value.comments} </Text>
                 <Right>

@@ -9,4 +9,3 @@ export const firebaseConfig = {
 export const facebookConfig = {
   facebookAppId: ""
 }
-

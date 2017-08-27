@@ -3,7 +3,6 @@
 import React from "react";
 import { StyleSheet, Text, View, Platform } from "react-native";
 import Expo from "expo";
-import * as firebase from "firebase";
 import { loginFb } from "../util/Login";
 import { checkLogin } from "../util/storageUtil";
 import LoginComponent from "./LoginComponent";
@@ -18,26 +17,29 @@ export default class Profile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: false
+      user: false,
+      loading: true
     };
   }
-  async componentWillMount() {
-    console.log("Function");
-    await checkLogin()
+  componentWillMount() {
+    this.setState({ loading: true });
+    
+    checkLogin()
       .then(email => {
         console.log(email);
         if (email != false) {
           console.log("User Logged In");
-          this.setState({ user: email });
+          this.setState({ user: email, loading: false });
           console.log(this.state);
         } else {
           console.log("No User Logged in");
-          this.setState({ user: false });
+          this.setState({ user: false, loading: false });
           console.log(this.state);
         }
       })
       .catch(error => {
         console.log(error);
+        this.setState({ loading: false });
       });
   }
   _onLogin = email => {
@@ -53,15 +55,19 @@ export default class Profile extends React.Component {
   };
 
   render() {
-    return (
-      <Container>
-        {this.state.user
+    const content = this.state.loading === false
+      ? this.state.user
           ? <ProfileComponent
               userEmail={this.state.user}
               onLogout={this._onLogout.bind(this)}
               navigateProps={this._navigateToIncident.bind(this)}
             />
-          : <LoginComponent onLogin={this._onLogin.bind(this)} />}
+          : <LoginComponent onLogin={this._onLogin.bind(this)} />
+      : <Text> - </Text>;
+
+    return (
+      <Container>
+        {content}
       </Container>
     );
   }
