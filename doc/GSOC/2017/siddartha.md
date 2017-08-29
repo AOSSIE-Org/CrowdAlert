@@ -26,6 +26,8 @@ https://github.com/sidd607/appr
 
 
 ## Links
+### GSoC 2017
+https://gitlab.com/sidd607/CrowdAlert/tags/GSoC-2017
 ### Project Repository
 https://gitlab.com/aossie/CrowdAlert
 ### Application hosted on Expo
