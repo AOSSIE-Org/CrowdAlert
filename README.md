@@ -3,7 +3,7 @@
 
 CrowdAlert is a crowdsourced application for reporting and viewing incidents aound the world.
 
-## Setting up the environment
+## Getting Started
 The project is built in Ract Native using the [Create React Native App](https://facebook.github.io/react-native/blog/2017/03/13/introducing-create-react-native-app.html) tool and [Expo](https://expo.io/). Make sure you have Node v6 or later installed. No Xcode or Android Studio installation is required.
 
 ### NPM Dependencies
