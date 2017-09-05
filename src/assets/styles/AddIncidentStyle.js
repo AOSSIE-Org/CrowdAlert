@@ -1,6 +1,6 @@
-import {StyleSheet } from 'react-native';
+// Style definition for AddIncident Screen
 
-
+import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     justifyContent: "flex-start",
@@ -22,9 +22,12 @@ const styles = StyleSheet.create({
     borderRightWidth: 2,
     borderRightColor: "black"
   },
-  commentSection: {
+  title: {
     flex: 3,
     paddingLeft: 10
+  },
+  comment: {
+    padding: 10
   },
   commentInput: {
     height: 50,

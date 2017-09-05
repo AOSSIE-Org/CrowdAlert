@@ -55,9 +55,9 @@ export default class Incident extends React.Component {
             <CardItem>
               <Body>
                 <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                  {" "}{this.state.incident.category}{" "}
+                  {" "}{capitalizeFirstLetter(this.state.incident.title)}{" "}
                 </Text>
-                <Text note> {this.state.incident.sub_category} </Text>
+                <Text note> {" "} </Text>
               </Body>
               <Right>
                 <Text> {timeSince(this.state.incident.datetime)} </Text>
@@ -141,7 +141,7 @@ export default class Incident extends React.Component {
             <View style={{ padding: 15, flex: 1 }}>
               <Button danger rounded block onPress={this._reportIncident}>
                 <Text style={{ color: "white" }}>
-                  Report
+                  Report Spam
                 </Text>
               </Button>
             </View>

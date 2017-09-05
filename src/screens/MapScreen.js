@@ -3,12 +3,7 @@ import { StyleSheet, Text, View, Platform, Dimensions } from "react-native";
 import Expo from "expo";
 import { Components } from "expo";
 import * as firebase from "firebase";
-
-//Import map marker images
-const road_marker = require("../assets/images/map/road_marker_100.png");
-const health_marker = require("../assets/images/map/health_marker_100.png");
-const fire_marker = require("../assets/images/map/fire_marker_100.png");
-
+import { getMarkerImage } from "../util/util";
 const { width, height } = Dimensions.get("window");
 const SCREEN_HEIGHT = height;
 const SCREEN_WIDTH = width;
@@ -37,16 +32,6 @@ export default class MapScreen extends React.Component {
 
   static navigationOptions = {
     header: null
-  };
-
-  // Sets the marker image based on the type of incident
-  _getMarkerImage = type => {
-    console.log(type);
-    if (type === "fire") {
-      return fire_marker;
-    } else if (type === "road") {
-      return road_marker;
-    } else return health_marker;
   };
 
   // This is a dummy function that would fetch details
@@ -151,9 +136,9 @@ export default class MapScreen extends React.Component {
                   latitude: marker.value.location.coords.latitude,
                   longitude: marker.value.location.coords.longitude
                 }}
-                title={marker.value.category}
+                title={marker.value.title}
                 description={marker.value.comments}
-                image={this._getMarkerImage(marker.value.category)}
+                image={getMarkerImage(marker.value.category)}
                 onCalloutPress={() => {
                   var incidentDetails = {
                     key: marker._key,

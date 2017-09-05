@@ -17,7 +17,8 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-  NetInfo
+  NetInfo,
+  Alert
 } from "react-native";
 import {
   Container,
@@ -46,7 +47,7 @@ export default class AddIncident extends React.Component {
     this.state = {
       category: params.type,
       comments: "",
-      sub_category: "key1",
+      title: "",
       datetime: Date.now(),
       user_id: "",
       public_share: true,
@@ -110,7 +111,15 @@ export default class AddIncident extends React.Component {
     }
   };
 
+  // On Submit
+  // Gets the user's location
+  // updates the state with location
+  // uploads the state to firebase
   _onSubmit = async () => {
+    if (this.state.title === "") {
+      Alert.alert("Title Required", "Please add a title for the post");
+      return;
+    }
     this._modalLoadingSpinnerOverLay.show();
     await NetInfo.isConnected.fetch().then(isConnected => {
       console.log("First, is " + (isConnected ? "online" : "offline"));
@@ -130,16 +139,25 @@ export default class AddIncident extends React.Component {
             alert("Error while uploading");
           });
       })
-      .catch(error => {});
+      .catch(error => {
+        Alert.alert(
+          "Location error",
+          "Cannot get location, enable location and try again."
+        );
+      });
 
     this._modalLoadingSpinnerOverLay.hide();
   };
+
+  // function to be used as a callback on successfull login via loginComponent
   _onLogin = email => {
     console.log("->", email);
     this.setState({ user_email: email });
     this.setState({ user_id: email.replace(".", "") });
     console.log(this.state);
   };
+
+  //Checks if a user is logged in
   _checkLogin = async () => {
     await checkLogin()
       .then(result => {
@@ -190,38 +208,28 @@ export default class AddIncident extends React.Component {
                     : <Text> Add Photo </Text>}
                 </View>
               </TouchableOpacity>
-              <View style={styles.commentSection}>
+              <View style={styles.title}>
                 <Item floatingLabel>
-                  <Label>Add Any Comments</Label>
+                  <Label>Title</Label>
                   <Input
                     onChangeText={text => {
-                      this.setState({ comments: text });
+                      this.setState({ title: text });
                     }}
                   />
                 </Item>
               </View>
             </View>
-            <View style={styles.subCategoryPicker}>
-              <Text style={styles.pickerHeader}> Select a sub Category </Text>
-              <View style={styles.picker}>
-                <Picker
-                  iosHeader="Select a sub Category"
-                  mode="dropdown"
-                  selectedValue={this.state.sub_category}
-                  onValueChange={item => {
-                    this.setState({ sub_category: item });
+            <View style={styles.comment}>
+              <Item floatingLabel>
+                <Label>Add any comments</Label>
+                <Input
+                  onChangeText={text => {
+                    this.setState({ comments: text });
                   }}
-                >
-                  {
-                    // TODO: get categories based on incident category
-                  }
-                  <Picker.Item label="Category1" value="Category1" />
-                  <Picker.Item label="Category2" value="Category2" />
-                  <Picker.Item label="Category3" value="Category3" />
-
-                </Picker>
-              </View>
+                />
+              </Item>
             </View>
+
             <View style={styles.additionOptions}>
               <Text style={styles.pickerHeader}> Upload Options </Text>
               <ListItem>
@@ -229,7 +237,10 @@ export default class AddIncident extends React.Component {
                   style={styles.checkBox}
                   isChecked={this.state.public_share}
                   onClick={() => {
-                    this.setState({ public_share: !this.state.public_share, visible: !this.state.visible });
+                    this.setState({
+                      public_share: !this.state.public_share,
+                      visible: !this.state.visible
+                    });
                   }}
                 />
                 <Body style={{ marginLeft: 10 }}>
