@@ -7,20 +7,22 @@ import {
     Dimensions,
     BackHandler,
     Alert,
+    Picker,
+    TouchableHighlight
 } from "react-native";
+import { Fab, Icon, Button } from 'native-base';
 import Expo from "expo";
 import {Constants, Location, Permissions, IntentLauncherAndroid} from 'expo';
 import {Components} from "expo";
 import * as firebase from "firebase";
-import {getMarkerImage} from "../util/util";
+import {getMarkerImage, getListCategories} from "../util/util";
 const {width, height} = Dimensions.get("window");
-const SCREEN_HEIGHT = height;
-const SCREEN_WIDTH = width;
 const ASPECT_RATIO = width / height;
+import Modal from 'react-native-modalbox';
 
 // latitudeDelta and longitudeDelta control the amount
 // of map to be displayed, in effect controlling the Zoom
-const LATITUDE_DELTA = 0.18;
+const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA + ASPECT_RATIO;
 
 export default class MapScreen extends React.Component {
@@ -33,7 +35,9 @@ export default class MapScreen extends React.Component {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA
       },
-      markers: []
+      markers: [],
+      domain:'all',
+      activeFab: true,
     };
 
     this.itemsRef = firebase.database().ref("incidents");
@@ -41,37 +45,6 @@ export default class MapScreen extends React.Component {
 
   static navigationOptions = {
     header: null
-  };
-
-  // This is a dummy function that would fetch details
-  // of markers from server
-  _getMarkerInformation = () => {
-    var tmp = [
-      {
-        id: 1,
-        type: "fire",
-        title: "Forrest Fire",
-        description: "Fire is spreading",
-        coordinate: {
-          latitude: 10,
-          longitude: 7
-        }
-      },
-      {
-        id: 2,
-        type: "road",
-        title: "Car Rollover",
-        description: "car rolled over",
-        coordinate: {
-          latitude: 11,
-          longitude: 8
-        }
-      }
-    ];
-    // this.setState({ markers: tmp });
-    //console.log("_getMarkerInformation");
-    //console.log(this.state.markers);
-    return tmp;
   };
 
   // Listening for changes in Incidents
@@ -95,28 +68,8 @@ export default class MapScreen extends React.Component {
   }
 
   componentDidMount() {
-    // Get Marker Information from the server
-    //this._getMarkerInformation();
-
     this.listenForItems(this.itemsRef);
     this._getLocationAsync();
-
-    // Get user's location to render the map around the user
-    // navigator.geolocation.getCurrentPosition(
-    //   position => {
-    //     var lat = parseFloat(position.coords.latitude);
-    //     var long = parseFloat(position.coords.longitude);
-    //     var initalRegion = {
-    //       latitude: lat,
-    //       longitude: long,
-    //       latitudeDelta: LATITUDE_DELTA,
-    //       longitudeDelta: LONGITUDE_DELTA
-    //     };
-    //     this.setState({ mapInitialRegion: initalRegion });
-    //   },
-    //   error => alert("Cannot Get Location"),
-    //   { enableHighAccuracy: true, timeout: 2000, maximumAge: 1000 }
-    // );
   }
 
   _getLocationAsync = async () => {
@@ -160,10 +113,25 @@ export default class MapScreen extends React.Component {
       };
       this.setState({mapInitialRegion: initalRegion});
   };
-
+    setFab(state){
+        this.setState({activeFab: state});
+    }
+    setDomain(category) {
+      this.setState({domain: category});
+    }
 
   render() {
-    //console.log(this.state);
+      var self=this;
+      var markers=this.state.markers.filter(function(item){
+           if(self.state.domain==='all'){
+               return true;
+           }
+           else{
+               return item.value.category===self.state.domain;
+           }
+       });
+       var categories=getListCategories();
+
     const { navigate } = this.props.navigation;
     return (
       <View style={{ flex: 1 }}>
@@ -180,8 +148,7 @@ export default class MapScreen extends React.Component {
               longitude: this.state.mapInitialRegion.longitude
             }}
           />
-          {this.state.markers.map(marker => {
-            //console.log(marker);
+          {markers.map(marker => {
             return (
               <Expo.MapView.Marker
                 key={marker._key}
@@ -203,6 +170,46 @@ export default class MapScreen extends React.Component {
             );
           })}
         </Expo.MapView>
+        {
+            this.state.activeFab &&
+            <Fab
+                active={this.state.activeFab}
+                direction="up"
+                containerStyle={{ }}
+                style={{ backgroundColor: '#f45d3f' }}
+                position="bottomRight"
+                onPress={() => {
+                    // this.refs.modal1.open();
+                    this.setFab(!this.state.activeFab);
+                }}>
+                <Icon name="funnel" />
+                {categories.map(item => {
+                    return(
+                        <Button style={{ backgroundColor: 'white' }} key={item.category}>
+                          <Text>{item.title}</Text>
+                        </Button>
+                    );
+                })}
+            </Fab>
+        }
+        <Modal
+         style={{ justifyContent: 'center', alignItems: 'center' }}
+         ref={"modal1"}
+         onClosed={()=>{this.setFab(!this.state.activeFab)}}
+         backButtonClose={true}>
+         {categories.map(item => {
+             return(
+                <TouchableHighlight
+                    key={item.category}
+                    onPress={() => {
+                        this.setDomain(item.category);
+                        this.refs.modal1.close()
+                    }}>
+                    <Text>{item.title}</Text>
+                </TouchableHighlight>
+             );
+         })}
+       </Modal>
       </View>
     );
   }

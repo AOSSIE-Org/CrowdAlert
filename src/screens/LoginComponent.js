@@ -70,8 +70,8 @@ export default class Login extends React.Component {
 
             <View style={{ justifyContent: "center" }}>
               <Button block rounded iconRight onPress={this._login}>
-                <Text style={{ color: "white", fontSize: 20 }}>
-                  Login with facebook{" "}
+                <Text style={{ color: "white", fontSize: 20, marginLeft:13 }}>
+                    Login with facebook{" "}
                 </Text>
                 <Icon name="logo-facebook" fontSize={20} />
               </Button>
