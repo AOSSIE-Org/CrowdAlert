@@ -35,8 +35,12 @@ import {
   ListItem,
   Card,
   CardItem,
-  Toast
+  Toast,
+  ActionSheet
 } from "native-base";
+
+var BUTTONS = ["Take photo from Gallery","Take photo from Camera", "Cancel"];
+var CANCEL_INDEX = 2;
 
 export default class AddIncident extends React.Component {
   constructor(props) {
@@ -100,12 +104,29 @@ export default class AddIncident extends React.Component {
   };
 
   // Pick image from gallery
-  _pickImage = async () => {
+  _galleryImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [16, 9],
       base64: true,
-      quality: 0.5
+      quality: 1,
+      exif: true
+    });
+    if (!result.cancelled) {
+      this.setState({ image_uri: result.uri });
+      this.setState({ image_base64: result.base64 });
+      this.setState({ image: true });
+      console.log(this.state.image_uri);
+    }
+  };
+
+  _cameraImage = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [16, 9],
+      base64: true,
+      quality: 1,
+      exif: true
     });
     if (!result.cancelled) {
       this.setState({ image_uri: result.uri });
@@ -215,7 +236,23 @@ export default class AddIncident extends React.Component {
                 </CardItem>
               </Card>}
             <View style={styles.rowContainer}>
-              <TouchableOpacity onPress={this._pickImage}>
+                {/* <TouchableOpacity onPress={this._galleryImage}> */}
+                <TouchableOpacity onPress={() =>
+                  ActionSheet.show(
+                    {
+                      options: BUTTONS,
+                      cancelButtonIndex: CANCEL_INDEX,
+                      title: "Choose an option below"
+                    },
+                    buttonIndex => {
+                      if(buttonIndex==0){
+                          this._galleryImage();
+                      }
+                      else if(buttonIndex==1){
+                          this._cameraImage();
+                      }
+                    }
+                  )}>
                 <View style={styles.addPhoto}>
                   <Icon name="camera" style={{ fontSize: 50 }} />
                   {this.state.image
@@ -291,6 +328,6 @@ export default class AddIncident extends React.Component {
           </Content>
         </Container>
       );
-    } 
+    }
   }
 }
