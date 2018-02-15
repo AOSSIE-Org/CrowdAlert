@@ -5,7 +5,7 @@
     "privacy": "public",
     "slug": "crowdAlert",
     "version": "1.0.0",
-    "sdkVersion": "18.0.0",
+    "sdkVersion": "23.0.0",
     "icon":"./src/assets/images/electric_marker_100.png",
     "loading" :{
       "icon": "./src/assets/images/aossie.png"

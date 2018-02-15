@@ -12,7 +12,7 @@ import {
   Right
 } from "native-base";
 import { query } from "../util/firebaseUtil";
-import LoadingSpinnerOverlay from "react-native-smart-loading-spinner-overlay";
+// import LoadingSpinnerOverlay from "react-native-smart-loading-spinner-overlay";
 import { getHeaderColor, capitalizeFirstLetter } from "../util/util";
 export default class IncidentListComponent extends React.Component {
   constructor(props) {
@@ -38,14 +38,14 @@ export default class IncidentListComponent extends React.Component {
   };
   async componentDidMount() {
     this.setState({ user: this.props.userEmail });
-    this._modalLoadingSpinnerOverLay.show();
+    // this._modalLoadingSpinnerOverLay.show();
     await query(this.props.userEmail).then(items => {
       this.setState({ incidents: items });
       this.setState({ num_incidents: items.length });
       this.setState({ loading: false });
     });
     console.log(this.state.incidents.length);
-    this._modalLoadingSpinnerOverLay.hide();
+    // this._modalLoadingSpinnerOverLay.hide();
   }
 
   render() {
@@ -84,9 +84,9 @@ export default class IncidentListComponent extends React.Component {
             );
           })}
         </Card>
-        <LoadingSpinnerOverlay
+        {/* <LoadingSpinnerOverlay
           ref={component => this._modalLoadingSpinnerOverLay = component}
-        />
+        /> */}
       </View>
     );
   }
