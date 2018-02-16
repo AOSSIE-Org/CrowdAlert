@@ -40,7 +40,7 @@ export default class ProfileComponent extends React.Component {
     console.log("state: ", this.state.user);
     return (
       <Container>
-        <Header>
+        <Header style={{ backgroundColor: '#8e44ad' }}>
           <Body>
             <Text style={{ color: "white", fontSize: 20, textAlign: "center" }}>
               {this.props.userEmail}
