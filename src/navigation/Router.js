@@ -23,6 +23,7 @@ export const TabNav = TabNavigator(
   {
     tabBarComponent: NavigationComponent,
     tabBarPosition: "bottom",
+    swipeEnabled: false,
     initialRouteName: "Home",
     lazy: true,
     tabBarOptions: {
