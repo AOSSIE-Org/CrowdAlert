@@ -40,7 +40,14 @@ export default class IncidentListComponent extends React.Component {
     this.setState({ user: this.props.userEmail });
     // this._modalLoadingSpinnerOverLay.show();
     await query(this.props.userEmail).then(items => {
-      this.setState({ incidents: items });
+      var items1 = [];
+      items.forEach(element => {
+        if (element.value.visible==true)
+        {
+          items1.push(element)
+        }
+      });
+      this.setState({ incidents: items1});
       this.setState({ num_incidents: items.length });
       this.setState({ loading: false });
     });

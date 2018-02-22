@@ -1,9 +1,11 @@
 // Screen for displaying individual incident
 
 import React from "react";
-import { StyleSheet, Text, View, Platform, Image, Modal } from "react-native";
+import { StyleSheet, Text, View, Platform, Image, Modal, Alert } from "react-native";
 import Expo from "expo";
 import { getHeaderColor, capitalizeFirstLetter } from "../util/util";
+import { firebase } from "../util/firebaseUtil";
+import { NavigationActions } from "react-navigation";
 import {
   Container,
   Header,
@@ -13,20 +15,18 @@ import {
   CardItem,
   Right,
   Left,
+  Icon,
   Button
 } from "native-base";
 import { report } from "../util/firebaseUtil";
 import { timeSince } from "../util/util";
-
 export default class Incident extends React.Component {
   static navigationOptions = {
     header: null
   };
-
   _reportIncident = () => {
     report(this.state.incident_key);
   };
-
   constructor(props) {
     super(props);
     const { params } = this.props.navigation.state;
@@ -35,6 +35,30 @@ export default class Incident extends React.Component {
       incident: params.data.value,
       incident_key: params.data.key
     };
+    this.itemsRef = this.getRef().child("incidents");
+  }
+  getRef = () => {
+    return firebase.database().ref();
+  };
+
+  _delete = async (title) => {
+    Alert.alert('', 'Are you sure you want to delete this incident',
+    [
+      {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+      {text: 'Yes', onPress: async () => {
+          await this.itemsRef.child(this.state.incident_key).update({ visible: false })
+            .then(result => {
+              console.log("Updation Complete");
+              this.props.navigation.dispatch(NavigationActions.back());
+            })
+            .catch(error => {
+              console.log("Error While uploading");
+              alert("Error while uploading");
+            });
+      }},
+    ],
+    { cancelable: false }
+  );
   }
   render() {
     return (
@@ -135,6 +159,13 @@ export default class Incident extends React.Component {
               <Button success rounded block>
                 <Text style={{ color: "white" }}>
                   Share
+                </Text>
+              </Button>
+            </View>
+            <View style={{ padding: 15, flex: 1 }}>
+              <Button success rounded block onPress={this._delete}>
+                <Text style={{ color: "white" }}>
+                  Delete
                 </Text>
               </Button>
             </View>
