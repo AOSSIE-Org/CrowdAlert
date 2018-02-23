@@ -4,8 +4,9 @@ import React from "react";
 import { StyleSheet, Text, View, Platform, Image, Modal, Alert } from "react-native";
 import Expo from "expo";
 import { getHeaderColor, capitalizeFirstLetter } from "../util/util";
-import { firebase } from "../util/firebaseUtil";
 import { NavigationActions } from "react-navigation";
+import * as firebase from "firebase";
+import Toast from 'react-native-simple-toast';
 import {
   Container,
   Header,
@@ -42,7 +43,7 @@ export default class Incident extends React.Component {
   };
 
   _delete = async (title) => {
-    Alert.alert('', 'Are you sure you want to delete this incident',
+    Alert.alert('', 'Are you sure you want to delete this incident ?',
     [
       {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
       {text: 'Yes', onPress: async () => {
@@ -50,6 +51,7 @@ export default class Incident extends React.Component {
             .then(result => {
               console.log("Updation Complete");
               this.props.navigation.dispatch(NavigationActions.back());
+              Toast.show("Incident Deleted");
             })
             .catch(error => {
               console.log("Error While uploading");
@@ -57,7 +59,7 @@ export default class Incident extends React.Component {
             });
       }},
     ],
-    { cancelable: false }
+    { cancelable: true }
   );
   }
   render() {
@@ -163,7 +165,7 @@ export default class Incident extends React.Component {
               </Button>
             </View>
             <View style={{ padding: 15, flex: 1 }}>
-              <Button success rounded block onPress={this._delete}>
+              <Button style = {{backgroundColor : "#F82535"}} rounded block onPress={this._delete}>
                 <Text style={{ color: "white" }}>
                   Delete
                 </Text>

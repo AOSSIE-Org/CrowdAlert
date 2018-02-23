@@ -31,6 +31,7 @@
     "react-native-check-box": "^2.0.2",
     "react-native-material-bottom-navigation": "^0.7.0",
     "react-native-prompt": "^1.0.0",
+    "react-native-simple-toast": "0.0.8",
     "react-native-vector-icons": "^4.2.0",
     "react-navigation": "^1.0.0-beta.11"
   }

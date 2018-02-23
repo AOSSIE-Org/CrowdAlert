@@ -8,6 +8,7 @@ import LoginComponent from "../screens/LoginComponent";
 import { NavigationActions } from "react-navigation";
 import { checkLogin } from "../util/storageUtil";
 import { getHeaderColor, capitalizeFirstLetter } from "../util/util";
+import Toast from 'react-native-simple-toast';
 import { firebase } from "../util/firebaseUtil";
 import {
   StyleSheet,
@@ -116,6 +117,7 @@ export default class AddIncident extends React.Component {
   // updates the state with location
   // uploads the state to firebase
   _onSubmit = async () => {
+    Toast.show("Uploading...", Toast.LONG);
     if (this.state.title === "") {
       Alert.alert("Title Required", "Please add a title for the post");
       return;
@@ -132,6 +134,7 @@ export default class AddIncident extends React.Component {
           .then(result => {
             console.log("Upload Complete");
             // this._modalLoadingSpinnerOverLay.hide();
+            Toast.show("Your response has been recorded");
             this.props.navigation.dispatch(NavigationActions.back());
           })
           .catch(error => {
