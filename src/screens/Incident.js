@@ -43,7 +43,7 @@ export default class Incident extends React.Component {
   };
 
   _delete = async (title) => {
-    Alert.alert('', 'Are you sure you want to delete this incident ?',
+    Alert.alert('', 'Are you sure you want to delete this incident?',
     [
       {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
       {text: 'Yes', onPress: async () => {
