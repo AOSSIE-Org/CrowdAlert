@@ -1,9 +1,12 @@
 // Screen for displaying individual incident
 
 import React from "react";
-import { StyleSheet, Text, View, Platform, Image, Modal } from "react-native";
+import { StyleSheet, Text, View, Platform, Image, Modal, Alert } from "react-native";
 import Expo from "expo";
 import { getHeaderColor, capitalizeFirstLetter } from "../util/util";
+import { NavigationActions } from "react-navigation";
+import * as firebase from "firebase";
+import Toast from 'react-native-simple-toast';
 import {
   Container,
   Header,
@@ -13,20 +16,18 @@ import {
   CardItem,
   Right,
   Left,
+  Icon,
   Button
 } from "native-base";
 import { report } from "../util/firebaseUtil";
 import { timeSince } from "../util/util";
-
 export default class Incident extends React.Component {
   static navigationOptions = {
     header: null
   };
-
   _reportIncident = () => {
     report(this.state.incident_key);
   };
-
   constructor(props) {
     super(props);
     const { params } = this.props.navigation.state;
@@ -35,26 +36,49 @@ export default class Incident extends React.Component {
       incident: params.data.value,
       incident_key: params.data.key
     };
+    this.itemsRef = this.getRef().child("incidents");
+  }
+  getRef = () => {
+    return firebase.database().ref();
+  };
+
+  _delete = async (title) => {
+    Alert.alert('', 'Are you sure you want to delete this incident?',
+    [
+      {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+      {text: 'Yes', onPress: async () => {
+          await this.itemsRef.child(this.state.incident_key).update({ visible: false })
+            .then(result => {
+              console.log("Updation Complete");
+              this.props.navigation.dispatch(NavigationActions.back());
+              Toast.show("Incident Deleted");
+            })
+            .catch(error => {
+              console.log("Error While uploading");
+              alert("Error while uploading");
+            });
+      }},
+    ],
+    { cancelable: true }
+  );
   }
   render() {
     return (
       <Container>
         <Header
-          style={{
-            backgroundColor: getHeaderColor(this.state.incident.category)
-          }}
+          style={{backgroundColor: getHeaderColor(this.state.incident.category)}}
         >
           <Body>
-            <Text style={{ color: "white", fontSize: 20, textAlign: "center" }}>
+            <Text style={styles.incident_category}>
               {capitalizeFirstLetter(this.state.incident.category)}
             </Text>
           </Body>
         </Header>
         <Content>
-          <Card style={{ padding: 5 }}>
+          <Card style={styles.card}>
             <CardItem>
               <Body>
-                <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                <Text style={styles.incident_title}>
                   {" "}{capitalizeFirstLetter(this.state.incident.title)}{" "}
                 </Text>
                 <Text note> {" "} </Text>
@@ -70,7 +94,7 @@ export default class Incident extends React.Component {
                     uri: "data:image/jpeg;base64, " +
                       this.state.incident.image_base64
                   }}
-                  style={{ height: 200, width: null, flex: 1 }}
+                  style={styles.incident_image}
                 />
               </CardItem>}
 
@@ -80,17 +104,17 @@ export default class Incident extends React.Component {
             <CardItem>
               <Left>
                 {this.state.incident.visible
-                  ? <Text style={{ color: "#34495e" }}>
+                  ? <Text style={styles.incident_visible}>
                       This post is visible to everyone
                     </Text>
-                  : <Text style={{ color: "#34495e" }}>
+                  : <Text style={styles.incident_visible}>
                       Only you can view this post
                     </Text>}
               </Left>
               <Right>
                 {this.state.incident.visible == false &&
                   this.state.incident.report_count > 0
-                  ? <Text style={{ color: "#e74c3c" }}>
+                  ? <Text style={styles.incident_reportcount}>
                       {" "}
                       Reported
                       {" "}
@@ -103,10 +127,10 @@ export default class Incident extends React.Component {
               </Right>
             </CardItem>
           </Card>
-          <Card style={{ padding: 5 }}>
+          <Card style={styles.card}>
             <Expo.MapView
               provider="google"
-              style={{ height: 200, width: null }}
+              style={styles.incident_map}
               initialRegion={{
                 latitude: this.state.incident.location.coords.latitude,
                 longitude: this.state.incident.location.coords.longitude,
@@ -126,21 +150,25 @@ export default class Incident extends React.Component {
           </Card>
 
           <View
-            style={{
-              padding: 5,
-              flexDirection: "row"
-            }}
+            style={styles.button_container}
           >
-            <View style={{ padding: 15, flex: 1 }}>
+            <View style={styles.button_view}>
               <Button success rounded block>
-                <Text style={{ color: "white" }}>
+                <Text style={styles.button_text}>
                   Share
                 </Text>
               </Button>
             </View>
-            <View style={{ padding: 15, flex: 1 }}>
+            <View style={styles.button_view}>
+              <Button style = {styles.button_color_delete} rounded block onPress={this._delete}>
+                <Text style={styles.button_text}>
+                  Delete
+                </Text>
+              </Button>
+            </View>
+            <View style={styles.button_view}>
               <Button danger rounded block onPress={this._reportIncident}>
-                <Text style={{ color: "white" }}>
+                <Text style={styles.button_text}>
                   Report Spam
                 </Text>
               </Button>
@@ -151,3 +179,46 @@ export default class Incident extends React.Component {
     );
   }
 }
+const styles = StyleSheet.create({
+  incident_category:{
+    color: "white",
+    fontSize: 20, 
+    textAlign: "center"
+  },
+  incident_title:{
+    fontSize: 20, 
+    fontWeight: "bold"
+  },
+  incident_image :{
+    height: 200, 
+    width: null, 
+    flex: 1
+  },
+  incident_visible:{
+    color: "#34495e"
+  },
+  incident_reportcount:{
+    color: "#e74c3c"
+  },
+  card:{
+    padding: 5
+  },
+  incident_map:{
+    height: 200, 
+    width: null
+  },
+  button_container:{
+    padding: 5,
+    flexDirection: "row"
+  },
+  button_text:{
+    color: "white"
+  },
+  button_view:{
+    padding: 15, 
+    flex: 1
+  },
+  button_color_delete:{
+    backgroundColor : "#F82535"
+  }
+});
