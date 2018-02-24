@@ -6,7 +6,6 @@ import Expo from "expo";
 import { getHeaderColor, capitalizeFirstLetter } from "../util/util";
 import { NavigationActions } from "react-navigation";
 import * as firebase from "firebase";
-import Toast from 'react-native-simple-toast';
 import {
   Container,
   Header,
@@ -17,7 +16,8 @@ import {
   Right,
   Left,
   Icon,
-  Button
+  Button,
+  Toast
 } from "native-base";
 import { report } from "../util/firebaseUtil";
 import { timeSince } from "../util/util";
@@ -51,7 +51,11 @@ export default class Incident extends React.Component {
             .then(result => {
               console.log("Updation Complete");
               this.props.navigation.dispatch(NavigationActions.back());
-              Toast.show("Incident Deleted");
+              Toast.show({
+                text: 'Incident has been deleted',
+                position: 'bottom',
+                duration : 3000
+              })
             })
             .catch(error => {
               console.log("Error While uploading");
