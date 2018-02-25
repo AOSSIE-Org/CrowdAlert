@@ -29,7 +29,6 @@ export default class HomeScreen extends React.Component {
         resolve(email);
       } else {
         Toast.show({
-          type : 'Succes',
           text : 'Please Login First',
           position : 'bottom',
           duration : 3000

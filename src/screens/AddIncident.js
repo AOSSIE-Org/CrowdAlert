@@ -188,7 +188,7 @@ export default class AddIncident extends React.Component {
   render() {
     if(this.state.loading) {
       return(
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <View style={styles.loading}>
           <Text>Loading</Text>
         </View>
       )

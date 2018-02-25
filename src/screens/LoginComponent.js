@@ -13,7 +13,7 @@ import {
   Toast
 } from "native-base";
 import React from "react";
-import { StyleSheet, Text, View, Platform, Dimensions, ToastAndroid } from "react-native";
+import { StyleSheet, Text, View, Platform, Dimensions } from "react-native";
 import Expo from "expo";
 import { loginFb } from "../util/Login";
 import { setUserEmail } from "../util/storageUtil";
