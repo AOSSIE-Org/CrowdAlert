@@ -33,7 +33,7 @@ export default class Login extends React.Component {
       await setUserEmail(user.email);
       this.props.onLogin(user.email);
       Toast.show({
-        text : 'Login Sucessfull',
+        text : 'Login Successful',
         position : 'bottom',
         duration : 3000
       })
