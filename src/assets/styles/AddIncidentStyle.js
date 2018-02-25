@@ -2,6 +2,11 @@
 
 import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
+  Loading : {
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
   container: {
     justifyContent: "flex-start",
     alignItems: "center",

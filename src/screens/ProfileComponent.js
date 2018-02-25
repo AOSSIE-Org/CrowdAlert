@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View, Platform } from "react-native";
 import Expo from "expo";
-import { Container, Header, Body, Content, Right, Button } from "native-base";
+import { Container, Header, Body, Content, Right, Button ,Toast } from "native-base";
 import { query } from "../util/firebaseUtil";
 import { removeUserEmail } from "../util/storageUtil";
 import IncidentListComponent from "./IncidentListComponent";
@@ -22,6 +22,11 @@ export default class ProfileComponent extends React.Component {
       alert("Err: ", error);
     });
     this.props.onLogout();
+    Toast.show({
+      text : "You are Logged out.",
+      position : 'bottom',
+      duration : 3000
+    })
   };
 
   _navigateIncident = incidentDetails => {

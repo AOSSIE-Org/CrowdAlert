@@ -9,7 +9,8 @@ import {
   Left,
   Right,
   Body,
-  Icon
+  Icon,
+  Toast
 } from "native-base";
 import React from "react";
 import { StyleSheet, Text, View, Platform, Dimensions } from "react-native";
@@ -31,6 +32,11 @@ export default class Login extends React.Component {
       console.log("Logged in as: ", user.email);
       await setUserEmail(user.email);
       this.props.onLogin(user.email);
+      Toast.show({
+        text : 'Login Successful',
+        position : 'bottom',
+        duration : 3000
+      })
     });
   };
   render() {

@@ -8,7 +8,6 @@ import LoginComponent from "../screens/LoginComponent";
 import { NavigationActions } from "react-navigation";
 import { checkLogin } from "../util/storageUtil";
 import { getHeaderColor, capitalizeFirstLetter } from "../util/util";
-import Toast from 'react-native-simple-toast';
 import { firebase } from "../util/firebaseUtil";
 import {
   StyleSheet,
@@ -36,7 +35,8 @@ import {
   Picker,
   ListItem,
   Card,
-  CardItem
+  CardItem,
+  Toast
 } from "native-base";
 
 export default class AddIncident extends React.Component {
@@ -60,10 +60,14 @@ export default class AddIncident extends React.Component {
       report_count: 0,
       reports: [""],
       user_email: "",
+      loading : true,
       visible: true
     };
     this.itemsRef = this.getRef().child("incidents");
     this._checkLogin();
+  }
+  componentDidMount() {
+    this.setState({loading: false});
   }
 
   getRef = () => {
@@ -117,7 +121,11 @@ export default class AddIncident extends React.Component {
   // updates the state with location
   // uploads the state to firebase
   _onSubmit = async () => {
-    Toast.show("Uploading...", Toast.LONG);
+    Toast.show({
+      text: 'Uploading , Please Wait.....',
+      position: 'bottom',
+      duration : 3000
+    })
     if (this.state.title === "") {
       Alert.alert("Title Required", "Please add a title for the post");
       return;
@@ -134,7 +142,11 @@ export default class AddIncident extends React.Component {
           .then(result => {
             console.log("Upload Complete");
             // this._modalLoadingSpinnerOverLay.hide();
-            Toast.show("Your response has been recorded");
+            Toast.show({
+              text: 'Your response has been recorded.',
+              position: 'bottom',
+              duration : 3000
+            })
             this.props.navigation.dispatch(NavigationActions.back());
           })
           .catch(error => {
@@ -174,7 +186,14 @@ export default class AddIncident extends React.Component {
       });
   };
   render() {
-    if (this.state.user_id != "") {
+    if(this.state.loading) {
+      return(
+        <View style={styles.loading}>
+          <Text>Loading</Text>
+        </View>
+      )
+    }
+    else {
       return (
         <Container>
           <Header
@@ -277,8 +296,6 @@ export default class AddIncident extends React.Component {
           </Content>
         </Container>
       );
-    } else {
-      return <LoginComponent onLogin={this._onLogin.bind(this)} />;
-    }
+    } 
   }
 }
