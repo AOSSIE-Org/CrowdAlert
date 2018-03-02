@@ -21,6 +21,7 @@ import {
 } from "native-base";
 import { report } from "../util/firebaseUtil";
 import { timeSince } from "../util/util";
+import { AsyncStorage } from "react-native";
 export default class Incident extends React.Component {
   static navigationOptions = {
     header: null
@@ -34,9 +35,20 @@ export default class Incident extends React.Component {
     console.log(params.data.key);
     this.state = {
       incident: params.data.value,
-      incident_key: params.data.key
+      incident_key: params.data.key,
+      del_button : false
     };
-    this.itemsRef = this.getRef().child("incidents");
+    this.itemsRef = this.getRef().child("incidents"); 
+       AsyncStorage.getItem("email")
+      .then(email => {
+        if (email == this.state.incident.user_email) {
+          this.setState({del_button : true});
+        }
+      })
+      .catch(error => {
+        console.log("Err: ", error);
+        reject(error);
+      });
   }
   getRef = () => {
     return firebase.database().ref();
@@ -163,13 +175,16 @@ export default class Incident extends React.Component {
                 </Text>
               </Button>
             </View>
-            <View style={styles.button_view}>
-              <Button style = {styles.button_color_delete} rounded block onPress={this._delete}>
-                <Text style={styles.button_text}>
-                  Delete
-                </Text>
-              </Button>
-            </View>
+            {this.state.del_button
+                  ? <View style={styles.button_view}>
+                    <Button style = {styles.button_color_delete} rounded block onPress={this._delete}>
+                      <Text style={styles.button_text}>
+                        Delete
+                      </Text>
+                    </Button>
+                    </View>
+                  : <View><Text></Text></View>
+            } 
             <View style={styles.button_view}>
               <Button danger rounded block onPress={this._reportIncident}>
                 <Text style={styles.button_text}>
