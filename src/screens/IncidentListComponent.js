@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, Platform } from "react-native";
+import { StyleSheet, Text, View, Platform,ActivityIndicator } from "react-native";
 import Expo from "expo";
 import {
   Container,
@@ -69,6 +69,9 @@ export default class IncidentListComponent extends React.Component {
   }
 
   render() {
+    if (this.state.loading){
+      return <View><ActivityIndicator size="large" color="#368560" /></View>
+    } else {
     return (
       <View>
         <Card>
@@ -106,5 +109,6 @@ export default class IncidentListComponent extends React.Component {
         </Card>
       </View>
     );
+    }
   }
 }

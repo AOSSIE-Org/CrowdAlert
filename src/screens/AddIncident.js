@@ -18,7 +18,8 @@ import {
   TouchableOpacity,
   TextInput,
   NetInfo,
-  Alert
+  Alert,
+  ActivityIndicator
 } from "react-native";
 import {
   Container,
@@ -61,7 +62,8 @@ export default class AddIncident extends React.Component {
       reports: [""],
       user_email: "",
       loading : true,
-      visible: true
+      visible: true,
+      isLoading : false
     };
     this.itemsRef = this.getRef().child("incidents");
     this._checkLogin();
@@ -95,7 +97,6 @@ export default class AddIncident extends React.Component {
       })
       .catch(error => {
         console.log("Error: ", error);
-        alert(error);
         return Promise.reject(error);
       });
   };
@@ -121,13 +122,10 @@ export default class AddIncident extends React.Component {
   // updates the state with location
   // uploads the state to firebase
   _onSubmit = async () => {
-    Toast.show({
-      text: 'Uploading , Please Wait.....',
-      position: 'bottom',
-      duration : 3000
-    })
+    this.setState({isLoading:true});
     if (this.state.title === "") {
       Alert.alert("Title Required", "Please add a title for the post");
+      this.setState({isLoading:false});
       return;
     }
     // this._modalLoadingSpinnerOverLay.show();
@@ -160,7 +158,7 @@ export default class AddIncident extends React.Component {
           "Cannot get location, enable location and try again."
         );
       });
-
+      this.setState({isLoading:false});
     // this._modalLoadingSpinnerOverLay.hide();
   };
 
@@ -292,7 +290,11 @@ export default class AddIncident extends React.Component {
             </Button>
             {/* <LoadingSpinnerOverlay
               ref={component => this._modalLoadingSpinnerOverLay = component}
-            /> */}
+            /> */
+              this.state.isLoading
+              ? <View><ActivityIndicator size="large" color="#368560" /></View>
+              : null
+            }
           </Content>
         </Container>
       );

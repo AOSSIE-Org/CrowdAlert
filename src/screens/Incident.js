@@ -183,7 +183,7 @@ export default class Incident extends React.Component {
                       </Text>
                     </Button>
                     </View>
-                  : <View><Text></Text></View>
+                  : null
             } 
             <View style={styles.button_view}>
               <Button danger rounded block onPress={this._reportIncident}>
