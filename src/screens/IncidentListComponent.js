@@ -13,7 +13,6 @@ import {
 } from "native-base";
 import { query } from "../util/firebaseUtil";
 import * as firebase from "firebase";
-//import LoadingSpinnerOverlay from "react-native-smart-loading-spinner-overlay";
 import { getHeaderColor, capitalizeFirstLetter } from "../util/util";
 export default class IncidentListComponent extends React.Component {
   constructor(props) {
@@ -41,8 +40,6 @@ export default class IncidentListComponent extends React.Component {
   async componentDidMount() {
     this.setState({ user: this.props.userEmail });
     this.listenForItems(this.itemsRef);
-     //this._modalLoadingSpinnerOverLay.show();
-     //this._modalLoadingSpinnerOverLay.hide();
   }
   // used the code of Mapscreen.js to refresh it
   listenForItems(itemsRef) {

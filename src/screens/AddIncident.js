@@ -1,7 +1,5 @@
 import React from "react";
 import Expo, { ImagePicker, Location, Permissions } from "expo";
-// import Toast from "react-native-smart-loading-spinner-overlay";
-// import LoadingSpinnerOverlay from "react-native-smart-loading-spinner-overlay";
 import CheckBox from "react-native-check-box";
 import styles from "../assets/styles/AddIncidentStyle";
 import LoginComponent from "../screens/LoginComponent";
@@ -128,7 +126,6 @@ export default class AddIncident extends React.Component {
       this.setState({isLoading:false});
       return;
     }
-    // this._modalLoadingSpinnerOverLay.show();
     await NetInfo.isConnected.fetch().then(isConnected => {
       console.log("First, is " + (isConnected ? "online" : "offline"));
     });
@@ -139,7 +136,6 @@ export default class AddIncident extends React.Component {
           .push(this.state)
           .then(result => {
             console.log("Upload Complete");
-            // this._modalLoadingSpinnerOverLay.hide();
             Toast.show({
               text: 'Your response has been recorded.',
               position: 'bottom',
@@ -159,7 +155,6 @@ export default class AddIncident extends React.Component {
         );
       });
       this.setState({isLoading:false});
-    // this._modalLoadingSpinnerOverLay.hide();
   };
 
   // function to be used as a callback on successfull login via loginComponent
@@ -288,9 +283,7 @@ export default class AddIncident extends React.Component {
             >
               <Text style={{ color: "white" }}>Submit</Text>
             </Button>
-            {/* <LoadingSpinnerOverlay
-              ref={component => this._modalLoadingSpinnerOverLay = component}
-            /> */
+            {
               this.state.isLoading
               ? <View><ActivityIndicator size="large" color="#368560" /></View>
               : null
