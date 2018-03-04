@@ -134,7 +134,12 @@ export default class MapScreen extends React.Component {
       if (!permission.locationServicesEnabled) {
           Alert.alert('', 'Please turn ON your GPS', [
               {
-                  text: 'Close the App',
+                  text: 'Cancel',
+                  onPress: () => console.log('Cancel Pressed'),
+                  style: 'cancel'
+              },
+              {
+                  text: 'Location settings',
                   onPress: ()=>{
                       // BackHandler.exitApp();
                       IntentLauncherAndroid.startActivityAsync(
