@@ -44,7 +44,7 @@ export default class Login extends React.Component {
 
     return (
       <Container>
-        <Header>
+        <Header style={{ backgroundColor: '#8e44ad' }}>
           <Body>
             <Text style={{ color: "white", fontSize: 20, textAlign: "center" }}>
               Profile Login
