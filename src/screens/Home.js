@@ -21,7 +21,7 @@ export default class HomeScreen extends React.Component {
   _navigate = category => {
     const { navigate } = this.props.navigation;
     //navigate("AddIncident", { type: category });
-    return new Promise(async (resolve, reject) => {  
+    return new Promise(async (resolve, reject) => {
     await  AsyncStorage.getItem("email")
     .then(email => {
       if (email != null) {
@@ -54,7 +54,7 @@ export default class HomeScreen extends React.Component {
   render() {
     return (
       <Container>
-        <Header>
+        <Header style={{ backgroundColor: '#00796B' }}>
           <Body>
             <Text style={{ color: "white", fontSize: 20, textAlign: "center" }}>
               Crowd Alert | Home
