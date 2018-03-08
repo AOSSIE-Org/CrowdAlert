@@ -213,12 +213,6 @@ export default class AddIncident extends React.Component {
           <Header
             style={{ backgroundColor: getHeaderColor(this.state.category) }}
           >
-            <Button
-              transparent
-              onPress={ () => { this.props.navigation.goBack() } }
-              >
-             <Icon name='ios-arrow-back' style={{ color: "white" }}/>
-           </Button>
             <Body>
               <Text
                 style={{ color: "white", fontSize: 20, textAlign: "center" }}

@@ -84,12 +84,6 @@ export default class Incident extends React.Component {
         <Header
           style={{backgroundColor: getHeaderColor(this.state.incident.category)}}
         >
-          <Button
-              transparent
-              onPress={ () => { this.props.navigation.goBack() } }
-              >
-             <Icon name='ios-arrow-back' style={{ color: "white" }}/>
-          </Button>
           <Body>
             <Text style={styles.incident_category}>
               {capitalizeFirstLetter(this.state.incident.category)}
@@ -207,16 +201,16 @@ export default class Incident extends React.Component {
 const styles = StyleSheet.create({
   incident_category:{
     color: "white",
-    fontSize: 20,
+    fontSize: 20, 
     textAlign: "center"
   },
   incident_title:{
-    fontSize: 20,
+    fontSize: 20, 
     fontWeight: "bold"
   },
   incident_image :{
-    height: 200,
-    width: null,
+    height: 200, 
+    width: null, 
     flex: 1
   },
   incident_visible:{
@@ -229,7 +223,7 @@ const styles = StyleSheet.create({
     padding: 5
   },
   incident_map:{
-    height: 200,
+    height: 200, 
     width: null
   },
   button_container:{
@@ -240,7 +234,7 @@ const styles = StyleSheet.create({
     color: "white"
   },
   button_view:{
-    padding: 15,
+    padding: 15, 
     flex: 1
   },
   button_color_delete:{
