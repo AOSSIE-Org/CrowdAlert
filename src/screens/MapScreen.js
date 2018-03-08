@@ -1,17 +1,26 @@
 import React from "react";
-import { StyleSheet, Text, View, Platform, Dimensions } from "react-native";
+import {
+    StyleSheet,
+    Text,
+    View,
+    Platform,
+    Dimensions,
+    BackHandler,
+    Alert,
+} from "react-native";
 import Expo from "expo";
-import { Components } from "expo";
+import {Constants, Location, Permissions, IntentLauncherAndroid} from 'expo';
+import {Components} from "expo";
 import * as firebase from "firebase";
-import { getMarkerImage } from "../util/util";
-const { width, height } = Dimensions.get("window");
+import {getMarkerImage} from "../util/util";
+const {width, height} = Dimensions.get("window");
 const SCREEN_HEIGHT = height;
 const SCREEN_WIDTH = width;
 const ASPECT_RATIO = width / height;
 
 // latitudeDelta and longitudeDelta control the amount
 // of map to be displayed, in effect controlling the Zoom
-const LATITUDE_DELTA = 0.0922;
+const LATITUDE_DELTA = 0.18;
 const LONGITUDE_DELTA = LATITUDE_DELTA + ASPECT_RATIO;
 
 export default class MapScreen extends React.Component {
@@ -90,24 +99,68 @@ export default class MapScreen extends React.Component {
     //this._getMarkerInformation();
 
     this.listenForItems(this.itemsRef);
+    this._getLocationAsync();
 
     // Get user's location to render the map around the user
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        var lat = parseFloat(position.coords.latitude);
-        var long = parseFloat(position.coords.longitude);
-        var initalRegion = {
-          latitude: lat,
-          longitude: long,
+    // navigator.geolocation.getCurrentPosition(
+    //   position => {
+    //     var lat = parseFloat(position.coords.latitude);
+    //     var long = parseFloat(position.coords.longitude);
+    //     var initalRegion = {
+    //       latitude: lat,
+    //       longitude: long,
+    //       latitudeDelta: LATITUDE_DELTA,
+    //       longitudeDelta: LONGITUDE_DELTA
+    //     };
+    //     this.setState({ mapInitialRegion: initalRegion });
+    //   },
+    //   error => alert("Cannot Get Location"),
+    //   { enableHighAccuracy: true, timeout: 2000, maximumAge: 1000 }
+    // );
+  }
+
+  _getLocationAsync = async () => {
+      const {status} = await Permissions.askAsync(Permissions.LOCATION);
+      if (status !== 'granted') {
+          Alert.alert('', 'Permission to access location was denied', [
+              {
+                  text: 'Close the App',
+                  onPress: () => BackHandler.exitApp()
+              }
+          ]);
+      }
+
+      let permission = await Location.getProviderStatusAsync();
+      if (!permission.locationServicesEnabled) {
+          Alert.alert('', 'Please turn ON your GPS', [
+              {
+                  text: 'Cancel',
+                  onPress: () => console.log('Cancel Pressed'),
+                  style: 'cancel'
+              },
+              {
+                  text: 'Location settings',
+                  onPress: ()=>{
+                      // BackHandler.exitApp();
+                      IntentLauncherAndroid.startActivityAsync(
+                        IntentLauncherAndroid.ACTION_LOCATION_SOURCE_SETTINGS
+                      );
+                  }
+              }
+          ]);
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      this.setState({location});
+      var initalRegion = {
+          latitude: this.state.location.coords.latitude,
+          longitude: this.state.location.coords.longitude,
           latitudeDelta: LATITUDE_DELTA,
           longitudeDelta: LONGITUDE_DELTA
-        };
-        this.setState({ mapInitialRegion: initalRegion });
-      },
-      error => alert("Cannot Get Location"),
-      { enableHighAccuracy: true, timeout: 2000, maximumAge: 1000 }
-    );
-  }
+      };
+      this.setState({mapInitialRegion: initalRegion});
+  };
+
 
   render() {
     //console.log(this.state);
