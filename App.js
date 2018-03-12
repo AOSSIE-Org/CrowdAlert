@@ -2,40 +2,41 @@ import React, { Component, PropTypes } from "react";
 import { AppNav } from "./src/navigation/Router";
 import { Root } from "native-base";
 import { BlurView, Constants } from "expo";
-import { View, AsyncStorage, Modal, Text, TouchableHighlight } from "react-native";
+import { View, AsyncStorage, Modal, Text, TouchableHighlight, StyleSheet } from "react-native";
 
 import styles from './src/assets/styles/ModalStyle'
 import Slides from './src/screens/Slides';
 
 export default class App extends React.Component {
-  state = {
-    modalVisible: true,
-    welcomeScreen : false
-  };
-
-  setModalVisible(visible) {
-    this.setState({ modalVisible: visible });
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalVisible: false
+    };
   }
-  _modaldisplay = () => {
-    AsyncStorage.getItem("modal")
-    .then(modal => {
-      if (modal!="displayed") {
-        this.setState({ welcomeScreen : true});
-         AsyncStorage.setItem("modal", "displayed").catch(error => {
-          return Promise.reject(error);
-        });
+  componentDidMount() {
+    AsyncStorage.getItem("modal_display1")
+    .then(modal_display1 => {
+      if (modal_display1!="displayed") {
+        console.log(modal_display1);
+        this.setState({modalVisible:true});
       }
     })
     .catch(error => {
       return Promise.reject(error);
     })
+    AsyncStorage.setItem("modal_display1", "displayed").catch(error => {
+      return Promise.reject(error);
+    });
+  }
+
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
   }
   render() {
-    this._modaldisplay();
-    if(this.state.welcomeScreen) {
     return (
       <Root>
-        <View style={{ backgroundColor: "black", height: Constants.statusBarHeight }} />
+        <View style={styles1.modal} />
         <AppNav />
         <Modal
           animationType={"fade"}
@@ -69,13 +70,11 @@ export default class App extends React.Component {
         </Modal>
       </Root>
     );
-  } else {
-    return (
-      <Root>
-        <View style={styles.statusBar} />
-        <AppNav />
-      </Root>
-    );
-  }
   }
 }
+const styles1 = StyleSheet.create({
+  modal : {
+    backgroundColor: "black", 
+    height: Constants.statusBarHeight
+  }
+})
