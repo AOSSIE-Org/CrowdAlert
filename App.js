@@ -10,13 +10,29 @@ import Slides from './src/screens/Slides';
 export default class App extends React.Component {
   state = {
     modalVisible: true,
+    welcomeScreen : false
   };
 
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
-
+  _modaldisplay = () => {
+    AsyncStorage.getItem("modal")
+    .then(modal => {
+      if (modal!="displayed") {
+        this.setState({ welcomeScreen : true});
+         AsyncStorage.setItem("modal", "displayed").catch(error => {
+          return Promise.reject(error);
+        });
+      }
+    })
+    .catch(error => {
+      return Promise.reject(error);
+    })
+  }
   render() {
+    this._modaldisplay();
+    if(this.state.welcomeScreen) {
     return (
       <Root>
         <View style={{ backgroundColor: "black", height: Constants.statusBarHeight }} />
@@ -53,5 +69,13 @@ export default class App extends React.Component {
         </Modal>
       </Root>
     );
+  } else {
+    return (
+      <Root>
+        <View style={styles.statusBar} />
+        <AppNav />
+      </Root>
+    );
+  }
   }
 }
