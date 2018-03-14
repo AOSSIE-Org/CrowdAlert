@@ -30,7 +30,6 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-23.0.0.tar.gz",
     "react-native-check-box": "^2.0.2",
     "react-native-material-bottom-navigation": "^0.7.0",
-    "react-native-modalbox": "^1.4.2",
     "react-native-prompt": "^1.0.0",
     "react-native-vector-icons": "^4.2.0",
     "react-navigation": "^1.0.0-beta.11"

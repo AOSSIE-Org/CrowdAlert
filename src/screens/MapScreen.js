@@ -7,10 +7,9 @@ import {
     Dimensions,
     BackHandler,
     Alert,
-    Picker,
     TouchableHighlight
 } from "react-native";
-import { Fab, Icon, Button } from 'native-base';
+import { Fab, Icon, Button, ActionSheet } from 'native-base';
 import Expo from "expo";
 import {Constants, Location, Permissions, IntentLauncherAndroid} from 'expo';
 import {Components} from "expo";
@@ -18,7 +17,6 @@ import * as firebase from "firebase";
 import {getMarkerImage, getListCategories} from "../util/util";
 const {width, height} = Dimensions.get("window");
 const ASPECT_RATIO = width / height;
-import Modal from 'react-native-modalbox';
 
 // latitudeDelta and longitudeDelta control the amount
 // of map to be displayed, in effect controlling the Zoom
@@ -130,7 +128,15 @@ export default class MapScreen extends React.Component {
                return item.value.category===self.state.domain;
            }
        });
-       var categories=getListCategories();
+       var categories = getListCategories();
+       var BUTTONS=['Show All'];
+       var categoriesArray=[];
+       categories.map(item => {
+           BUTTONS.push(item.title);
+       });
+       categories.map(item => {
+           categoriesArray.push(item.category);
+       });
 
     const { navigate } = this.props.navigation;
     return (
@@ -170,46 +176,32 @@ export default class MapScreen extends React.Component {
             );
           })}
         </Expo.MapView>
-        {
-            this.state.activeFab &&
-            <Fab
-                active={this.state.activeFab}
-                direction="up"
-                containerStyle={{ }}
-                style={{ backgroundColor: '#f45d3f' }}
-                position="bottomRight"
-                onPress={() => {
-                    // this.refs.modal1.open();
-                    this.setFab(!this.state.activeFab);
-                }}>
-                <Icon name="funnel" />
-                {categories.map(item => {
-                    return(
-                        <Button style={{ backgroundColor: 'white' }} key={item.category}>
-                          <Text>{item.title}</Text>
-                        </Button>
-                    );
-                })}
-            </Fab>
-        }
-        <Modal
-         style={{ justifyContent: 'center', alignItems: 'center' }}
-         ref={"modal1"}
-         onClosed={()=>{this.setFab(!this.state.activeFab)}}
-         backButtonClose={true}>
-         {categories.map(item => {
-             return(
-                <TouchableHighlight
-                    key={item.category}
-                    onPress={() => {
-                        this.setDomain(item.category);
-                        this.refs.modal1.close()
-                    }}>
-                    <Text>{item.title}</Text>
-                </TouchableHighlight>
-             );
-         })}
-       </Modal>
+        <Fab
+            active={this.state.activeFab}
+            direction="up"
+            containerStyle={{ }}
+            style={{ backgroundColor: 'green' }}
+            position="bottomRight"
+            onPress={() => {
+                // this.refs.modal1.open();
+                // this.setFab(!this.state.activeFab);
+                ActionSheet.show(
+                  {
+                    options: BUTTONS,
+                    title: "Please choose incident category to filter"
+                  },
+                  buttonIndex => {
+                      if(buttonIndex===0){
+                          this.setDomain('all');
+                      }
+                      else{
+                          this.setDomain(categoriesArray[buttonIndex-1]);
+                      }
+                  }
+                )
+            }}>
+            <Icon name="funnel" />
+        </Fab>
       </View>
     );
   }
