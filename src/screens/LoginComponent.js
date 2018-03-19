@@ -18,6 +18,8 @@ import Expo from "expo";
 import { loginFb } from "../util/Login";
 import { setUserEmail } from "../util/storageUtil";
 
+const { height: screenHeight } = Dimensions.get("window");
+
 export default class Login extends React.Component {
   static navigationOptions = {
     header: null
@@ -40,8 +42,6 @@ export default class Login extends React.Component {
     });
   };
   render() {
-    const { height: screenHeight } = Dimensions.get("window");
-
     return (
       <Container>
         <Header style={{ backgroundColor: '#8e44ad' }}>
@@ -52,15 +52,7 @@ export default class Login extends React.Component {
           </Body>
         </Header>
 
-        <View
-          style={{
-            flex: 1,
-            height: screenHeight,
-            justifyContent: "center",
-            flexDirection: "column",
-            backgroundColor: "white"
-          }}
-        >
+        <View style={styles.heading}>
           <View style={styles.logoItem}>
             <Text style={{ fontSize: 45, alignSelf: "center" }}>
               {" "}Crowd Alert
@@ -70,8 +62,8 @@ export default class Login extends React.Component {
 
             <View style={{ justifyContent: "center" }}>
               <Button block rounded iconRight onPress={this._login}>
-                <Text style={{ color: "white", fontSize: 20 }}>
-                  Login with facebook{" "}
+                <Text style={styles.innerButton}>
+                    Login with facebook{" "}
                 </Text>
                 <Icon name="logo-facebook" fontSize={20} />
               </Button>
@@ -84,21 +76,32 @@ export default class Login extends React.Component {
     );
   }
 }
-
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  logoItem: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-end"
-  },
-  loginItem: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  }
+    container: {
+        backgroundColor: "#fff",
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    heading: {
+        flex: 1,
+        height: screenHeight,
+        justifyContent: "center",
+        flexDirection: "column",
+        backgroundColor: "white"
+    },
+    logoItem: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "flex-end"
+    },
+    loginItem: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    innerButton: {
+        color: "white",
+        fontSize: 20,
+        marginLeft: 13
+    }
 });
