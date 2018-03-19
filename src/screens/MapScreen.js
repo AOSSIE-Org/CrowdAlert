@@ -119,13 +119,13 @@ export default class MapScreen extends React.Component {
     }
 
   render() {
-      var self=this;
-      var markers=this.state.markers.filter(function(item){
-           if(self.state.domain==='all'){
+      var state=this.state;
+      var markers=state.markers.filter(function(item){
+           if(state.domain==='all'){
                return true;
            }
            else{
-               return item.value.category===self.state.domain;
+               return item.value.category===state.domain;
            }
        });
        var categories = getListCategories();
