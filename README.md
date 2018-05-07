@@ -3,18 +3,17 @@
 
 CrowdAlert is a crowdsourced application for reporting and viewing incidents aound the world.
 
+## NOTE
+This repository is **deprecated** and is no longer being maintained. Please follow our new repository [Crowd Alert Mobile](https://gitlab.com/aossie/CrowdAlert-Mobile) for further development
+
+The current Crowd Alert app was in **expo** which limited its growth. With no native code integration and restricted library support it could not be developed further and therefore, it is not ready for production. 
+
+You can find the new repositories at the following link: <br>
+- Mobile: [Crowd Alert Mobile](https://gitlab.com/aossie/CrowdAlert-Mobile) <br>
+- Web: [Crowd Alert Web](https://gitlab.com/aossie/CrowdAlert-Web)      
+
 ## Getting Started
 The project is built in React Native using the [Create React Native App](https://facebook.github.io/react-native/blog/2017/03/13/introducing-create-react-native-app.html) tool and [Expo](https://expo.io/). Make sure you have Node v6 or later installed. No Xcode or Android Studio installation is required.
-
-## Note
-This repository is **deprecated** and is no longer being maintained.
-
-The Crowd Alert app was in **expo** which limited the growth of the app due to lesser libraries in it,no native code integration was possible and is not ready for production. 
-
-You can find the new repositories at the following link: 
-
-[Crowd Alert Mobile.](https://gitlab.com/aossie/CrowdAlert-Mobile)    
-[Crowd Alert Web.](https://gitlab.com/aossie/CrowdAlert-Web)      
 
 ### NPM Dependencies
 Install node package dependencies
